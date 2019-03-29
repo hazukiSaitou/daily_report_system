@@ -38,16 +38,19 @@ public class ReportsCreateServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        EntityManager em = DBUtil.createEntityManager();
+        String _token = (String) request.getParameter("_token");
+        if (_token != null && _token.equals(request.getSession().getId())) {
+            EntityManager em = DBUtil.createEntityManager();
 
-        Report r = new Report();
+            Report r = new Report();
 
-        r.setEmployee((Employee) request.getSession().getAttribute("login_employee"));
+            r.setEmployee((Employee) request.getSession().getAttribute("login_employee"));
 
-        Date report_date = new Date(System.currentTimeMillis());
-        String rd_str = request.getParameter("report_date");
-        if (rd_str != null && !rd_str.equals("")) {
-            report_date = Date.valueOf(request.getParameter("report_date"));
+            Date report_date = new Date(System.currentTimeMillis());
+            String rd_str = request.getParameter("report_date");
+            if (rd_str != null && !rd_str.equals("")) {
+                report_date = Date.valueOf(request.getParameter("report_date"));
+            }
             r.setReport_date(report_date);
 
             r.setTitle(request.getParameter("title"));
@@ -76,7 +79,6 @@ public class ReportsCreateServlet extends HttpServlet {
 
                 response.sendRedirect(request.getContextPath() + "/reports/index");
             }
-
         }
 
     }
